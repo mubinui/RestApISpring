@@ -1,0 +1,9 @@
+Method -> API urls (Urls starts with base urls ) -> Operation
+GET -> /courses -> get all course
+GET -> /courses/{courseId} -> get single course of given id
+
+POST -> /courses -> ADD NEW COURSE
+
+PUT -> /courses -> Update the course
+
+DELETE -> /courses/{courseId} -> Delete the course with the specific id
