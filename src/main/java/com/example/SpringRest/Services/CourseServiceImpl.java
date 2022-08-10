@@ -1,77 +1,57 @@
 package com.example.SpringRest.Services;
 
+import com.example.SpringRest.Dao.CourseDao;
 import com.example.SpringRest.Entities.Course;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CourseServiceImpl implements CourseService{
-    List<Course> list;
-
-
-    public CourseServiceImpl() {
-        this.list = new ArrayList<>();
-        list.add(new Course(110,"Introduction to Spring","This course contains basics of Spring"));
-        list.add(new Course(120,"Spring Boot ","Detailed Spring boot"));
-        list.add(new Course(130,"My History","Story of Soloman"));
-    }
+    @Autowired
+    private CourseDao courseDao;
 
     @Override
     public List<Course> getCourses() {
-        return list;
+        return courseDao.findAll();
     }
     @Override
     public Course getCourse(long courseId){
-        Course c = null;
-        for (Course course:list){
-            if (course.getId()==courseId){
-                c = course;
-                break;
-            }
 
-        }
-        return c;
+
+        return courseDao.getReferenceById(courseId);
     }
 
     @Override
     public Course addCourse(Course course) {
-        list.add(course);
+
+        courseDao.save(course);
+
         return course;
     }
     @Override
     public Course update(Course co){
-        Course c = null;
-        int i = 0;
-        for (Course course:list){
-            if (course.getId()==co.getId()){
-                c = co;
-                Course k = list.remove(i);
-                list.add(co);
-                break;
-            }
-            i++;
+        courseDao.save(co);
 
-        }
-        return c;
+        return co;
     }
 
     @Override
-    public Course delete(long courseId) {
-        Course c = null;
-        int i = 0;
-        for (Course course:list){
-            if (course.getId()==courseId){
-                c = list.remove(i);
+    public ResponseEntity<HttpStatus> deleteCourse(long courseId) {
+        ResponseEntity<HttpStatus> st = null;
 
-
-                break;
-            }
-            i++;
+        if(courseDao.existsById(courseId)){
+            Course entity = courseDao.getReferenceById(courseId);
+            courseDao.delete(entity);
+            st = new ResponseEntity<>(HttpStatus.OK);
 
         }
-        return c;
+
+        return st;
     }
 
 

@@ -3,6 +3,8 @@ import com.example.SpringRest.Entities.Course;
 import com.example.SpringRest.Services.CourseService;
 import com.example.SpringRest.Services.CourseServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,10 +15,6 @@ public class MyController {
     //REST -> Representational State Transfer
     @Autowired
     private CourseService courseService;
-    @GetMapping("/home")
-    public String home(){
-        return "Mubin's Home";
-    }
     @GetMapping("/courses")
     public List<Course> getCourses(){
 
@@ -38,8 +36,15 @@ public class MyController {
 
     }
     @DeleteMapping("/courses/{courseId}")
-    public Course delete(@PathVariable String courseId){
-        return this.courseService.delete(Long.parseLong(courseId));
+    public ResponseEntity<HttpStatus> deleteCourse(@PathVariable String courseId){
+        try{
+            return this.courseService.deleteCourse(Long.parseLong(courseId));
+
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
 
     }
 
